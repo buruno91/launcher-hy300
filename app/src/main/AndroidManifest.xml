@@ -12,6 +12,7 @@
         <package android:name="com.disney.disneyplus" />
         <package android:name="com.wbd.stream" />
         <package android:name="com.hbo.hbonow" />
+        <package android:name="au.com.dok.mjd.mpfjwb" />
         <package android:name="org.jw.jwlibrary.mobile" />
     </queries>
     <application
