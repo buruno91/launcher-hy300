@@ -1,0 +1,6 @@
+LAUNCHER HY300 - como gerar o APK (sem instalar nada no PC)
+1. Crie uma conta e um repositório novo e vazio no github.com.
+2. Envie todos os arquivos desta pasta para o repositório (Add file > Upload files),
+   mantendo a pasta .github (se ela não subir, crie o arquivo .github/workflows/build.yml pelo site).
+3. Aba Actions > "Build APK" > Run workflow. Em ~3 min aparece o arquivo launcher-apk.
+4. Baixe, extraia o app-debug.apk e instale no projetor (pendrive ou adb install).

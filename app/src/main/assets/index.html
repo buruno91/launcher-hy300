@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:#000;color:#fff;font-family:system-ui,Roboto,sans-serif}
+#splash{position:fixed;inset:0;z-index:30;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
+#splash.out{opacity:0;pointer-events:none}
+.orb{width:14vmin;height:14vmin;border-radius:50%;background:conic-gradient(#5b9dff,#9b6bff,#ff6bb5,#5b9dff);animation:spin 2.4s linear infinite;-webkit-mask:radial-gradient(circle,transparent 55%,#000 56%);mask:radial-gradient(circle,transparent 55%,#000 56%)}
+@keyframes spin{to{transform:rotate(360deg)}}
+#splash h1{margin-top:4vmin;font-weight:300;letter-spacing:.5em;font-size:5vmin;animation:fade 2s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+#home{position:fixed;inset:0;padding:6vh 6vw;background:radial-gradient(120% 120% at 15% 0%,#22365f,#0b1220 62%);display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:flex-start}
+#clock{font-size:9vmin;font-weight:200;line-height:1}
+#date{font-size:3vmin;opacity:.7;margin-top:1vmin;text-transform:capitalize}
+.hello{font-size:3vmin;opacity:.7}
+.row{margin-top:auto;margin-bottom:8vh;display:flex;gap:2.2vw;flex-wrap:nowrap}
+.tile{all:unset;box-sizing:border-box;flex:1;min-width:0;aspect-ratio:16/10;border-radius:2.2vmin;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2vmin;font-size:2.8vmin;font-weight:500;transition:transform .18s,box-shadow .18s}
+.tile i{font-style:normal;font-size:7vmin;font-weight:700}
+.tile:focus{transform:scale(1.12);box-shadow:0 0 0 .5vmin #fff,0 2vmin 5vmin rgba(0,0,0,.6);z-index:2}
+#toast{position:fixed;left:50%;bottom:4vh;transform:translateX(-50%);background:#fffe;color:#111;padding:1.4vmin 3vmin;border-radius:5vmin;font-size:2.6vmin;opacity:0;transition:opacity .3s;z-index:20}
+#toast.on{opacity:1}
+#saver{position:fixed;inset:0;z-index:25;background:#000;display:none}
+#saver.on{display:block}
+#sclock{position:absolute;transition:all 6s ease-in-out;font-size:12vmin;font-weight:200;text-align:center;opacity:.85}
+#sdate{display:block;font-size:3.2vmin;opacity:.6;text-transform:capitalize}
+</style></head><body>
+<div id="splash"><div class="orb"></div><h1>BEM-VINDO</h1></div>
+<div id="home">
+  <div class="top"><div><div class="hello" id="hello"></div><div id="date"></div></div><div id="clock"></div></div>
+  <div class="row" id="row"></div>
+</div>
+<div id="saver"><div id="sclock"><span id="stime"></span><span id="sdate"></span></div></div>
+<div id="toast"></div>
+<script>
+// pkgs: tenta cada pacote na ordem. YouTube sem anúncios = SmartTube (instalar à parte).
+const TILES=[
+ {n:'YouTube',c:'#c4302b',g:'▶',p:['com.teamsmart.videomanager.tv','com.liskovsoft.smarttubetv.beta','com.google.android.youtube.tv','com.google.android.youtube']},
+ {n:'Netflix',c:'#b20710',g:'N',p:['com.netflix.ninja','com.netflix.mediaclient']},
+ {n:'Disney+',c:'#113ccf',g:'D+',p:['com.disney.disneyplus']},
+ {n:'HBO Max',c:'#5a2ca0',g:'M',p:['com.wbd.stream','com.hbo.hbonow']},
+ {n:'JW Library',c:'#4a6da7',g:'JW',p:['org.jw.jwlibrary.mobile']},
+ {n:'Espelhar tela',c:'#0f7b6c',g:'⇆',a:'cast'},
+ {n:'Configurações',c:'#3b4252',g:'⚙',a:'settings'}
+];
+const $=id=>document.getElementById(id);
+const row=$('row');
+TILES.forEach(t=>{const b=document.createElement('button');b.className='tile';b.style.background=t.c;b.tabIndex=0;
+ b.innerHTML='<i>'+t.g+'</i><span>'+t.n+'</span>';b.onclick=()=>run(t);row.appendChild(b);});
+function toast(m){const e=$('toast');e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2600)}
+function run(t){
+ if(!window.Android){toast('Prévia no navegador: '+t.n);return}
+ if(t.a){Android[t.a]();return}
+ for(const p of t.p){if(Android.launch(p))return}
+ toast(t.n+' não está instalado');
+}
+function tick(){
+ const d=new Date();
+ const hm=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+ const dt=d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+ $('clock').textContent=hm;$('date').textContent=dt;$('stime').textContent=hm;$('sdate').textContent=dt;
+ const h=d.getHours();$('hello').textContent=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+}
+tick();setInterval(tick,10000);
+// splash
+setTimeout(()=>{$('splash').classList.add('out');focusFirst()},2600);
+function focusFirst(){const f=row.children[1]||row.children[0];f&&f.focus()}
+window.onResumeHome=()=>{wake();focusFirst()};
+// protetor de tela
+let idle,roam;const IDLE_MS=120000;
+function wake(){$('saver').classList.remove('on');clearInterval(roam);clearTimeout(idle);idle=setTimeout(sleep,IDLE_MS)}
+function sleep(){$('saver').classList.add('on');const s=$('sclock');
+ const mv=()=>{s.style.left=(5+Math.random()*45)+'vw';s.style.top=(8+Math.random()*60)+'vh'};mv();roam=setInterval(mv,15000)}
+// controle remoto
+document.addEventListener('keydown',e=>{
+ const saverOn=$('saver').classList.contains('on');
+ wake(); if(saverOn){e.preventDefault();return}
+ const k=[...row.children],i=k.indexOf(document.activeElement);
+ if(e.key==='ArrowRight'){e.preventDefault();k[Math.min(i+1,k.length-1)].focus()}
+ else if(e.key==='ArrowLeft'){e.preventDefault();k[Math.max(i-1,0)].focus()}
+ else if(e.key==='Enter'||e.keyCode===23){e.preventDefault();if(i>=0)k[i].click()}
+});
+document.addEventListener('mousemove',wake);document.addEventListener('click',wake);
+wake();
+</script></body></html>
