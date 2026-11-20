@@ -42,7 +42,7 @@ class MainActivity : Activity() {
         Item("Netflix", 0xFFB20710.toInt(), "N", listOf("com.netflix.ninja", "com.netflix.mediaclient")),
         Item("Disney+", 0xFF113CCF.toInt(), "D+", listOf("com.disney.disneyplus")),
         Item("HBO Max", 0xFF5A2CA0.toInt(), "M", listOf("com.wbd.stream", "com.hbo.hbonow")),
-        Item("JW Library", 0xFF4A6DA7.toInt(), "JW", listOf("org.jw.jwlibrary.mobile")),
+        Item("JW Media", 0xFF4A6DA7.toInt(), "JW", listOf("au.com.dok.mjd.mpfjwb", "org.jw.jwlibrary.mobile")),
         Item("Espelhar", 0xFF0F7B6C.toInt(), "⇆", action = "cast"),
         Item("Ajustes", 0xFF3B4252.toInt(), "⚙", action = "settings")
     )
