@@ -43,6 +43,7 @@ class MainActivity : Activity() {
         Item("Disney+", 0xFF113CCF.toInt(), "D+", listOf("com.disney.disneyplus")),
         Item("HBO Max", 0xFF5A2CA0.toInt(), "M", listOf("com.wbd.stream", "com.hbo.hbonow")),
         Item("JW Media", 0xFF4A6DA7.toInt(), "JW", listOf("au.com.dok.mjd.mpfjwb", "org.jw.jwlibrary.mobile")),
+        Item("Alinhar tela", 0xFF8A5A00.toInt(), "▣", action = "keystone"),
         Item("Espelhar", 0xFF0F7B6C.toInt(), "⇆", action = "cast"),
         Item("Ajustes", 0xFF3B4252.toInt(), "⚙", action = "settings")
     )
@@ -241,6 +242,11 @@ class MainActivity : Activity() {
 
     private fun run(item: Item) {
         when (item.action) {
+            "keystone" -> {
+                if (!tryComponent("com.softwinner.tcorrection", "com.softwinner.tcorrection.projection.ProjectionSettingActivity"))
+                    Toast.makeText(this, "Ajuste de tela não disponível", Toast.LENGTH_LONG).show()
+                return
+            }
             "settings" -> { tryStart(Settings.ACTION_SETTINGS); return }
             "cast" -> { if (!tryStart("android.settings.CAST_SETTINGS")) tryStart(Settings.ACTION_SETTINGS); return }
         }
@@ -255,6 +261,10 @@ class MainActivity : Activity() {
         }
         Toast.makeText(this, item.name + " não está instalado", Toast.LENGTH_LONG).show()
     }
+
+    private fun tryComponent(pkg: String, cls: String): Boolean = try {
+        startActivity(Intent().setClassName(pkg, cls).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)); true
+    } catch (e: Exception) { false }
 
     private fun tryStart(action: String): Boolean = try {
         startActivity(Intent(action).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)); true
