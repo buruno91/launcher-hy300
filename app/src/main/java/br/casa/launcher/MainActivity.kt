@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -34,15 +35,16 @@ class MainActivity : Activity() {
         val color: Int,
         val glyph: String,
         val pkgs: List<String> = emptyList(),
-        val action: String? = null
+        val action: String? = null,
+        val store: String? = null
     )
 
     private val items = listOf(
         Item("YouTube", 0xFFC4302B.toInt(), "▶", listOf("com.teamsmart.videomanager.tv", "com.liskovsoft.smarttubetv.beta", "com.google.android.youtube.tv", "com.google.android.youtube")),
-        Item("Netflix", 0xFFB20710.toInt(), "N", listOf("com.netflix.ninja", "com.netflix.mediaclient")),
-        Item("Disney+", 0xFF113CCF.toInt(), "D+", listOf("com.disney.disneyplus")),
-        Item("HBO Max", 0xFF5A2CA0.toInt(), "M", listOf("com.wbd.stream", "com.hbo.hbonow")),
-        Item("JW Media", 0xFF4A6DA7.toInt(), "JW", listOf("au.com.dok.mjd.mpfjwb", "org.jw.jwlibrary.mobile")),
+        Item("Netflix", 0xFFB20710.toInt(), "N", listOf("com.netflix.ninja", "com.netflix.mediaclient"), store = "com.netflix.ninja"),
+        Item("Disney+", 0xFF113CCF.toInt(), "D+", listOf("com.disney.disneyplus"), store = "com.disney.disneyplus"),
+        Item("HBO Max", 0xFF5A2CA0.toInt(), "M", listOf("com.wbd.stream", "com.hbo.hbonow"), store = "com.wbd.stream"),
+        Item("JW Media", 0xFF4A6DA7.toInt(), "JW", listOf("au.com.dok.mjd.mpfjwb", "org.jw.jwlibrary.mobile"), store = "au.com.dok.mjd.mpfjwb"),
         Item("Alinhar tela", 0xFF8A5A00.toInt(), "▣", action = "keystone"),
         Item("Espelhar", 0xFF0F7B6C.toInt(), "⇆", action = "cast"),
         Item("Ajustes", 0xFF3B4252.toInt(), "⚙", action = "settings")
@@ -258,6 +260,12 @@ class MainActivity : Activity() {
                 startActivity(i)
                 return
             }
+        }
+        if (item.store != null) {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + item.store)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                return
+            } catch (e: Exception) { }
         }
         Toast.makeText(this, item.name + " não está instalado", Toast.LENGTH_LONG).show()
     }
