@@ -40,7 +40,7 @@ class MainActivity : Activity() {
     )
 
     private val items = listOf(
-        Item("YouTube", 0xFFC4302B.toInt(), "▶", listOf("com.teamsmart.videomanager.tv", "com.liskovsoft.smarttubetv.beta", "com.google.android.youtube.tv", "com.google.android.youtube")),
+        Item("YouTube", 0xFFC4302B.toInt(), "▶", listOf("org.smarttube.stable", "com.teamsmart.videomanager.tv", "com.liskovsoft.smarttubetv.beta", "com.google.android.youtube.tv", "com.google.android.youtube")),
         Item("Netflix", 0xFFB20710.toInt(), "N", listOf("com.netflix.ninja", "com.netflix.mediaclient"), store = "com.netflix.ninja"),
         Item("Disney+", 0xFF113CCF.toInt(), "D+", listOf("com.disney.disneyplus"), store = "com.disney.disneyplus"),
         Item("HBO Max", 0xFF5A2CA0.toInt(), "M", listOf("com.wbd.stream", "com.hbo.hbonow"), store = "com.wbd.stream"),
