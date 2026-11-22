@@ -12,9 +12,10 @@
         <package android:name="com.disney.disneyplus" />
         <package android:name="com.wbd.stream" />
         <package android:name="com.hbo.hbonow" />
-        <package android:name="com.softwinner.tcorrection" />
-        <package android:name="au.com.dok.mjd.mpfjwb" />
         <package android:name="org.jw.jwlibrary.mobile" />
+        <package android:name="au.com.dok.mjd.mpfjwb" />
+        <package android:name="com.softwinner.tcorrection" />
+        <package android:name="org.smarttube.stable" />
     </queries>
     <application
         android:label="Meu Launcher"
